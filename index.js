@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 
 const appSettings = {
     databaseURL: "https://realtime-database-65559-default-rtdb.firebaseio.com/"
@@ -15,20 +15,40 @@ const shoppingListEl = document.getElementById("shopping-list")
 
 addButtonEl.addEventListener("click", function() {
     let inputValue = inputFieldEl.value
-    
+    //push new value to database
     push(shoppingListInDB, inputValue)
     
     clearInputFieldEl()
 
     appendItemToShoppingListEl(inputValue)
 })
-
+//update array from database, snapshot is the new change
+onValue(shoppingListInDB, function(snapshot){
+    //get array of array(key, value)
+    let itemArray = Object.entries(snapshot.val())
+    clearShoppingListEl()
+    for(let i=0; i<itemArray.length; i++){
+        let currentItem=itemArray[i]
+        let currentKey=currentItem[0]
+        let currentValue=currentItem[1]
+        appendItemToShoppingListEl(currentItemValue)
+    }
+})
 
 
 function clearInputFieldEl() {
     inputFieldEl.value = ""
 }
+function clearShoppingListEl(){
+    shoppingListEl.innerHTML=''
+}
 
 function appendItemToShoppingListEl(itemValue) {
-    shoppingListEl.innerHTML += `<li>${itemValue}</li>`
+    //create element with tag
+    let newEl = document.createElement("li")
+    //set text inside
+    newEl.textContent = itemValue
+    //choose where to put
+    shoppingListEl.append(newEl)
+    
 }
