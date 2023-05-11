@@ -14,13 +14,15 @@ const addButtonEl = document.getElementById("add-button")
 const shoppingListEl = document.getElementById("shopping-list")
 
 addButtonEl.addEventListener("click", function() {
-    let inputValue = inputFieldEl.value
-    //push new value to database
-    push(shoppingListInDB, inputValue)
-    
-    clearInputFieldEl()
-
-    appendItemToShoppingListEl(inputValue)
+    if (inputValue != "") {
+        let inputValue = inputFieldEl.value
+        //push new value to database
+        push(shoppingListInDB, inputValue)
+        
+        clearInputFieldEl()
+        
+        appendItemToShoppingListEl(inputValue)
+    }
 })
 //update array from database, snapshot is the new data
 onValue(shoppingListInDB, function(snapshot){
@@ -59,7 +61,7 @@ function appendItemToShoppingListEl(item) {
 
     newEl.addEventListener("click", function(){
         let exactLocationOfItemInDB = ref(database, `shoppingList/${itemID}`)
-        this.remove(exactLocationOfItemInDB)
+        remove(exactLocationOfItemInDB)
     })
     //choose where to put
     shoppingListEl.append(newEl)
