@@ -22,16 +22,21 @@ addButtonEl.addEventListener("click", function() {
 
     appendItemToShoppingListEl(inputValue)
 })
-//update array from database, snapshot is the new change
+//update array from database, snapshot is the new data
 onValue(shoppingListInDB, function(snapshot){
-    //get array of array(key, value)
-    let itemArray = Object.entries(snapshot.val())
-    clearShoppingListEl()
-    for(let i=0; i<itemArray.length; i++){
-        let currentItem=itemArray[i]
-        let currentKey=currentItem[0]
-        let currentValue=currentItem[1]
-        appendItemToShoppingListEl(currentItem)
+    if(snapshot.exists()){
+        //get array of array(key, value)
+        let itemArray = Object.entries(snapshot.val())
+        clearShoppingListEl()
+        for(let i=0; i<itemArray.length; i++){
+            let currentItem=itemArray[i]
+            let currentKey=currentItem[0]
+            let currentValue=currentItem[1]
+            appendItemToShoppingListEl(currentItem)
+        }
+    }
+    else{
+        shoppingListEl.innerHTML = "No items here... yet"
     }
 })
 
